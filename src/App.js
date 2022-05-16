@@ -1,23 +1,29 @@
-import logo from './logo.svg';
+import react, {useState, useEffect} from 'react';
+import Card from './components/Card';
+import axios from 'axios';
 import './App.css';
 
 function App() {
+  const [todos, setTodos] = useState(null);
+  const [error, setError] = useState(null);
+  const getTodos = () => {
+    axios.get('https://my-json-server.typicode.com/EdwinMurimi/my-server/todos')
+      .then(res => setTodos(res.data))
+      .catch(error => setError(error.message));
+  }
+  // useEffect(callback, dependency array)
+  useEffect(() => {
+    getTodos();
+  }, []);
+
+  const createTodo = () => {
+    // put your logic
+  }
+
+  console.log(todos);
   return (
     <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+      {error ? <h4>{error}</h4> : todos?.map(todo => <Card todo={todo}/>)}
     </div>
   );
 }
